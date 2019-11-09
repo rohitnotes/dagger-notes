@@ -86,6 +86,49 @@ In general:
   * Components = Services
   * Activities/Fragments = Clients
 
-You will **ALWAYS** need an AppComponent and you will **ALWAYS** need to put it inside your BaseApplication class.
+You will **ALWAYS** need an **AppComponent** and you will **ALWAYS** need to put it inside your **BaseApplication** class.
 
 ## Injecting Activities and @ContributesAndroidInjector
+Every Dagger interaction = a client-server interaction in some level.
+
+At veiw-level: Activities and Fragments act as clients; and Components as 
+services.
+
+For this, we should first mark activities as potential clients.
+
+**Dagger Module**: A place for dependencies to live to add them to components.
+
+```Java
+@Module
+public abstract class ActivityBuildersModule {
+    @ContributesAndroidInjector //AuthActivity is a potential client that I can inject dependencies into.
+    abstract AuthActivity contributeAuthActivity();
+
+
+    @Provides //Inject this static dependency into AuthActivity.
+    static String someString(){
+        return "this is a test string";
+    }
+}
+
+
+// Should extend from DaggerAppCompatActivity
+public class AuthActivity extends DaggerAppCompatActivity {
+    private static final String TAG = "AuthActivity";
+
+    @Inject // Property to inject into.
+    String someString;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_auth);
+
+        Log.d(TAG, "onCreate: " + someString);
+    }
+}
+```
+
+You ALWAYS will have to declare your activities inside **ActivityBuildersModule** class.
+
+## Component Modules and Static @Provides
