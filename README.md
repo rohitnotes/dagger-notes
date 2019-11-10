@@ -22,7 +22,7 @@ If using classes in `dagger.android`:
 ```
 
 ## What is Dagger2.2?
-Dagger is essentially a code generator.
+***Dagger is essentially a code generator.***
 
 ```Java
 public class User{
@@ -132,3 +132,36 @@ public class AuthActivity extends DaggerAppCompatActivity {
 You ALWAYS will have to declare your activities inside **ActivityBuildersModule** class.
 
 ## Component Modules and Static @Provides
+```Java
+@Component(
+        modules = {
+                AndroidSupportInjectionModule.class, // Always needed for Application-level AppComponent.
+                ...
+        })
+public interface AppComponent extends AndroidInjector<BaseApplication> {
+    ...
+}
+```
+
+**`AppModule` class**: where we should put all of the application-level dependencies for the project. e.g. Retrofit Instance, Glide instance and *anything that is going to exist and not change for the entire lifetime of the app*.
+
+**`@Provides` annotation**: used to declare a dependency. e.g.
+```Java
+@Module
+public class AppModule {
+
+    @Provides // creates this dependency when this String is injected into an Activity.
+    static String someString(){
+        return "this is a test string";
+    }
+}
+```
+We use `static` for dependencies bcuz documentation recommends; it is more efficient.
+
+a (sub)modulea is unique to the particular component.
+  * *AuthModule* -> *AuthComponent*
+  * *MainModule* -> *MainComponent*
+
+## Referencing Multiple Dagger Dependencies within a Single Module
+
+
