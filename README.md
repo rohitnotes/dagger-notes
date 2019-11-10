@@ -131,7 +131,7 @@ public class AuthActivity extends DaggerAppCompatActivity {
 
 You ALWAYS will have to declare your activities inside **ActivityBuildersModule** class.
 
-## Component Modules and Static @Provides
+## Component Modules and static @Provides
 ```Java
 @Component(
         modules = {
@@ -162,6 +162,45 @@ a (sub)modulea is unique to the particular component.
   * *AuthModule* -> *AuthComponent*
   * *MainModule* -> *MainComponent*
 
-## Referencing Multiple Dagger Dependencies within a Single Module
+### Referencing Multiple Dagger Dependencies within a Single Module
+It can be a good convention to name `AppModule` class `@Provides` methods as `providesSth(){...}`.
 
+#### Injecting `Glide` into our `AuthActivity`
+```Java
+    @Provides
+    static RequestOptions provideRequestOptions(){
+        return RequestOptions
+                .placeholderOf(R.drawable.white_background)
+                .error(R.drawable.white_background); // If Glide can't load image
+    }
+```
 
+```Java
+    @Provides
+    static RequestManager provideGlideInstance(Application application, RequestOptions requestOptions){
+        // We also have a RequestOptions object available bcuz of the upper function.
+        return Glide.with(application)
+                .setDefaultRequestOptions(requestOptions);
+    }
+```
+
+```Java
+public class AuthActivity extends DaggerAppCompatActivity {
+
+    private static final String TAG = "AuthActivity";
+
+    @Inject
+    Drawable logo;
+
+    @Inject
+    RequestManager requestManager;
+
+    private void setLogo(){
+        requestManager
+                .load(logo)
+                .into((ImageView)findViewById(R.id.login_logo));
+    }
+}
+```
+
+## Scoping, Custom Scopes & Singletons
