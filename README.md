@@ -204,3 +204,12 @@ public class AuthActivity extends DaggerAppCompatActivity {
 ```
 
 ## Scoping, Custom Scopes & Singletons
+**Singletons**: you provide instances and they exist as long as the app is alive; But not a good idea to mark every object of your app as Singleton: If app get quite big all of these objects lay around in memory -> a lof of overhead.
+
+**Scoping** is the solution of the *problem of having all objects sitting around in memory* (not needed of course).
+  * Singleton is only one scope.
+  * You can create a scope to only exist as long as some Activity or Component exists.
+  * You can build a *custom scope* and tell objects to become instances under *finite conditions*.
+
+### Singleton Scope with Dagger2
+
