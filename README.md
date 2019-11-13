@@ -212,4 +212,11 @@ public class AuthActivity extends DaggerAppCompatActivity {
   * You can build a *custom scope* and tell objects to become instances under *finite conditions*.
 
 ### Singleton Scope with Dagger2
+`@Sigleton‍` annotation
+  * makes the **AppComponent** scoped as application-wide.
+  * should also be used for dependencies in **AppModule**.
+
+When the component dies, all of its dependencies will also be destroyed.
+
+
 
